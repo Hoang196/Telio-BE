@@ -103,6 +103,7 @@ class Auth {
   /* User Login/Signin controller  */
   async postSignin(req, res) {
     let { email, password } = req.body;
+    console.log(req.body);
     if (!email || !password) {
       return res.json({
         error: "Fields must not be empty",
@@ -110,12 +111,14 @@ class Auth {
     }
     try {
       const data = await userModel.findOne({ email: email });
+      console.log('daata', data);
       if (!data) {
         return res.json({
           error: "Invalid email or password",
         });
       } else {
         const login = await bcrypt.compare(password, data.password);
+        console.log(login);
         if (login) {
           const token = jwt.sign(
             { _id: data._id, role: data.userRole },
